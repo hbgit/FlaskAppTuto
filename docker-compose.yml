@@ -1,0 +1,18 @@
+# web:
+#    Builds from the Dockerfile in the current directory.
+#    Forwards the exposed port 5000 on the container to port 5000 on the host machine..
+#    Mounts the current directory on the host to /todo inside the container allowing you to modify the code without having to rebuild the image.
+#    Links to the container name db which is the MongoDB container
+# db
+#    Creates a standard MongoDB container from the image mongo:3.0.2
+web:
+  build: . # Dockerfile
+  command: python -u app.py
+  ports:
+    - "5000:5000"
+  volumes:
+    - .:/todo
+  links:
+    - db
+db:
+  image: mongo:3.0.2
