@@ -1,10 +1,30 @@
-<form action="/new" method="POST">
+<form action="/new" method="POST" enctype="multipart/form-data">
   <input type="text" name="name"></input>
   <input type="text" name="description"></input>
-  <input type="submit"></input>
+  <input type="file" name="photo">
+  <input type="submit" value="Upload"></input>
 </form>
+
+<!--
+Info at https://medium.com/@jasonrigden/jinja2-templating-engine-tutorial-4bd31fb4aea3
+-->
+{% if error %}
+   <p><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      <ul>
+         {% for message in messages %}
+         <li<{{ message }}</li>
+         {% endfor %}
+      </ul>
+   {% endif %}
+{% endwith %}
+
 
 {% for item in items %}
   <h1> {{ item.name }} </h1>
   <p> {{ item.description }} <p>
+  <p> {{ item.path_image }} <p>
 {% endfor %}
