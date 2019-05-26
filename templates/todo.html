@@ -1,30 +1,45 @@
-<form action="/new" method="POST" enctype="multipart/form-data">
-  <input type="text" name="name"></input>
-  <input type="text" name="description"></input>
-  <input type="file" name="photo">
-  <input type="submit" value="Upload"></input>
-</form>
+<!DOCTYPE html>
+<html>
 
-<!--
-Info at https://medium.com/@jasonrigden/jinja2-templating-engine-tutorial-4bd31fb4aea3
--->
-{% if error %}
-   <p><strong>Error:</strong> {{ error }}
-{% endif %}
+<head>
+    <meta charset='utf-8'>
+    <title>TODO List</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="{{ url_for('static', filename='main.css') }}">
+</head>
 
-{% with messages = get_flashed_messages() %}
-   {% if messages %}
-      <ul>
-         {% for message in messages %}
-         <li<{{ message }}</li>
-         {% endfor %}
-      </ul>
-   {% endif %}
-{% endwith %}
+<body>
 
+    <div class="form-style-5">
+        <form action="/new" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <legend>TODO with Image</legend>
+                <input type="text" name="name" placeholder="Name"></input>
+                <input type="text" name="description" placeholder="Description"></input>
+                <input type="file" name="photo" placeholder="Image">
+                <input type="submit" value="Upload"></input>
+            </fieldset>
+        </form>
+    </div>
 
-{% for item in items %}
-  <h1> {{ item.name }} </h1>
-  <p> {{ item.description }} <p>
-  <p> {{ item.path_image }} <p>
-{% endfor %}
+    <!--
+    Info at https://medium.com/@jasonrigden/jinja2-templating-engine-tutorial-4bd31fb4aea3
+    -->
+    <p>
+        {% if error %}
+        <strong>Error:</strong> {{ error }} {% endif %}
+    </p>
+    {% for item in items %}
+    <div class="form-style-5">
+        <fieldset>
+            <h1 class="number"> {{ item.name }} </h1>
+            <p> {{ item.description }}</p>
+            <img src="static/images/{{ item.photo }}" alt={{ item.photo }} width="200" height="200">
+        </fieldset>
+    </div>
+    <p></p>
+    {% endfor %}
+
+</body>
+
+</html>

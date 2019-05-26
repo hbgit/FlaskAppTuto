@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, request, render_template, flash
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 import sys
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = 'S#!@123'
@@ -25,7 +26,7 @@ def deleteAll():
 
 @app.route('/')
 def todo():
-
+    
     _items = db.tododb.find()
     items = [item for item in _items]
 
@@ -35,6 +36,13 @@ def todo():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def black_and_white(input_image_path, name_file):
+    image_file = Image.open(input_image_path) # open colour image
+    image_file = image_file.convert('1') # convert image to black and white
+    image_file.save("static/images/"+name_file)
+
 
 # @app.route('/new', methods=['POST'])
 @app.route('/new', methods=['GET', 'POST'])
@@ -61,9 +69,12 @@ def new():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        item_doc['path_image'] = "uploads/" + str(file.filename)
+        item_doc['photo'] = file.filename
 
     db.tododb.insert_one(item_doc)
+
+    # Convert image to black and white
+    black_and_white("uploads/"+str(item_doc['photo']), str(item_doc['photo']))
 
     return redirect(url_for('todo'))
 
